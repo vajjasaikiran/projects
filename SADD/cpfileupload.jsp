@@ -1,0 +1,47 @@
+<%@include file="ccheader.jsp"%>
+<%
+String msg = request.getParameter("msg");
+if(msg != null){
+out.println("<script>alert('File Was Uploaded By Cloud Client..')</script>");
+}
+
+String msg1 = request.getParameter("msg1");
+if(msg1 != null){
+out.println("<script>alert('File Uploading Failed..')</script>");
+}
+
+String msg2 = request.getParameter("msg2");
+if(msg2 != null){
+out.println("<script>alert('This File Already Existed..')</script>");
+}
+String msg3 = request.getParameter("msg3");
+if(msg3 != null){
+out.println("<script>alert('File Upload Request Sent to Auditor..')</script>");
+}
+String msg4 = request.getParameter("msg4");
+if(msg4 != null){
+out.println("<script>alert('File Upload Requesting Sent to Auditor Failed..')</script>");
+}
+String sts1=request.getParameter("sts1");
+System.out.println("sts1="+sts1);
+session.setAttribute("sts1",sts1);
+%>
+		<div align="center"><br><br><br>
+<form action="fileupload1.jsp" method="post" ENCTYPE="multipart/form-data">
+<table>
+<tr><td colspan="3"><font size="6" color="orange"><b><u>File Upload</u></b></font></td></tr>
+<tr><td><br><br><br></td></tr>
+<tr>
+<td><font size="5">Upload&nbsp;File&nbsp;here</font></td>
+<td><font size="5">:</font></td>
+<td><input type="file" name="filename"  required/></td>
+</tr>
+<tr><td><br></td></tr>
+<tr>
+<td></td>
+<td></td>
+<td><input type="submit" value="SendtoAuditor"  required/></td>
+</tr>
+</table> <br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br>
+ <%@include file="footer.jsp"%>
