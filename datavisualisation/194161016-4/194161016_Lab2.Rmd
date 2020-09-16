@@ -1,0 +1,106 @@
+---
+title: "194161016_Lab2"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+library(gapminder)
+library(ggplot2)
+data.gapminder <- data.frame(gapminder)
+colnames(data.gapminder)
+ggplot(data = data.gapminder)+
+  geom_line(mapping = aes(x=year,y=lifeExp,group=country))
+```
+1)The graph looks a bit clumsy as we have 142 countries.  
+2)The plot has many lines, where each line giving us life expectancy over time for every country.The plot is not that meaningful as we may not be able to figure out which line corresponds to which country.   
+```{r fig.width=12}
+#2.1
+library(dplyr)
+library(socviz)
+countries <- unique(data.gapminder$country)
+data.g1 <- filter(data.gapminder,data.gapminder$country %in% countries[1:28])
+data.g2 <- filter(data.gapminder,data.gapminder$country %in% countries[29:56])
+data.g3 <- filter(data.gapminder,data.gapminder$country %in% countries[57:84])
+data.g4 <- filter(data.gapminder,data.gapminder$country %in% countries[85:112])
+data.g5 <- filter(data.gapminder,data.gapminder$country %in% countries[113:142])
+
+
+
+ggplot(data = data.g1)+
+  geom_line(mapping = aes(x=year,y=lifeExp))+
+  facet_wrap(.~country)
+ggplot(data = data.g2)+
+  geom_line(mapping = aes(x=year,y=lifeExp))+
+  facet_wrap(.~country)
+ggplot(data = data.g3)+
+  geom_line(mapping = aes(x=year,y=lifeExp))+
+  facet_wrap(.~country)
+ggplot(data = data.g4)+
+  geom_line(mapping = aes(x=year,y=lifeExp))+
+  facet_wrap(.~country)
+ggplot(data = data.g5)+
+  geom_line(mapping = aes(x=year,y=lifeExp))+
+  facet_wrap(.~country)
+```
+1) Country is the most appropriate variable to facet the data.  
+2) As we can see in the plot that upon using country to facet the data,we can clearly observe the trends of life expectancy over time for every country.  
+```{r}
+data.gss <- data.frame(gss_sm)
+
+#2.2
+ggplot(data=data.gss,mapping=aes(x=age,y=childs))+geom_point(alpha=0.2)+geom_smooth()+facet_grid(race~degree)
+```
+1) The above smooth plots tells us age and number of childern with that age for different combinations of race and degree.  
+2) We can see White and High school category has more number of children where as there is no child from white, balck or other with no degree.  
+
+```{r}
+#3
+ggplot(data=data.gss)+
+  geom_bar(mapping=aes(x=polviews),fill='black')+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#4
+ggplot(data=data.gss)+
+  geom_bar(mapping=aes(x=polviews,y=..prop..,fill=religion,color=religion))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(data=data.gss)+
+  geom_bar(mapping=aes(x=polviews,fill=religion,color=religion))+
+  facet_wrap(.~bigregion)+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+
+```{r fig.width=12}
+library(gridExtra)
+#5.1
+ggplot(data=data.gss)+
+  geom_histogram(mapping=aes(x=age),binwidth = 3.5)
+#5.2
+ggplot(data=data.gss)+
+  geom_histogram(mapping=aes(x=age,fill=race),binwidth = 3.5)
+#5.3
+
+p1 <- ggplot(data=data.gss,mapping=aes(x=age,fill=race,color=race))+
+  geom_density(position="stack",alpha=0.8)
+p2<-ggplot(data=data.gss,mapping=aes(x=age,fill=race,color=race))+
+  geom_histogram()
+
+p3<-ggplot(data=data.gss,mapping=aes(x=agegrp,fill=race,color=race))+
+  geom_density(position="stack",alpha=0.8)
+p4<-ggplot(data=data.gss,mapping=aes(x=agegrp,fill=race,color=race))+
+  geom_histogram(stat="count")
+
+grid.arrange(p1,p2,p3,p4)
+```
+As age variable has continuous values, density plot as well as histogram will give us a good understanding.  
+As agegrp variable has discrete values density plot will not give us much information as density best suits for continuous variable.where as histogram helps us with better understanding of the data.  
+If we look at the plots for agegrp density plot is completely overlapping and not giving proper information, where as histogram is clearly telling us
+count of people with different races for different age groups.Hence Histogram is useful for agegrp.
+```{r fig.width=12}
+#5.4
+ggplot(data=data.gss)+
+  geom_density(mapping=aes(x=age,fill=degree,color=degree),alpha=0.3)+facet_wrap(.~income16,scale="free_y")
+```

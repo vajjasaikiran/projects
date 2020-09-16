@@ -1,0 +1,28 @@
+---
+title: '194161016'
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r fig.width=8,fig.height=6}
+library("gapminder")
+library("ggplot2")
+library("MASS")
+data.gapminder <- data.frame(gapminder)
+ggplot(data=data.gapminder,mapping=aes(x=log(gdpPercap),y=lifeExp))+
+  geom_point(size=0.7)+
+  geom_smooth(method="lm",formula = y~poly(x,3),show.legend = TRUE,aes(colour="lm"))+
+  geom_smooth(method="glm",show.legend = TRUE,aes(colour="glm"))+
+  geom_smooth(method="gam",show.legend = TRUE,formula=y~log(x),aes(colour="gam"))+
+  geom_smooth(method="loess",show.legend = TRUE,aes(colour="loess"))+
+  geom_smooth(method="rlm",show.legend=TRUE,aes(colour="rlm"),formula = y~poly(x,2))+
+  scale_colour_manual(name="smoothing methods",values = c("blue","red","green","orange","cyan"))+
+  labs(title="Demo of different smoothing methods")+theme(plot.title = element_text(hjust=0.5))
+                                                          
+```

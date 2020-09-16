@@ -1,0 +1,203 @@
+---
+title: '194161016'
+author: "Saikiran (194161016)"
+date: "16/03/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+library("gapminder")
+library("ggplot2")
+library("dplyr")
+library("gam")
+library("MASS")
+data.gapminder <- data.frame(gapminder)
+train.data <- data.gapminder %>% filter(year>=1952,year<=1992)
+test.data <- data.gapminder %>% filter(year>=1993,year<=2007)
+
+lm.fit<-lm(lifeExp~gdpPercap,train.data)
+summary.lm<-summary(lm.fit)
+summary(lm.fit)
+```
+
+We can check the significance of any variable by looking at its p value.
+P-value basically tells us the probability of the predictor variable coefficient being zero.If the p-value is very less(generally checked if it is less than 0.05), we can say that there is very less chance of the coefficient being zero of the concerned variable and hence the variable is said to be significant(having impact in predicting response/output variable).  
+  
+Linear Model:
+In our case if we observe the summary of our linear fit, the p value of gdpPercap is <2e-16. It shows that the chance of coefficient of gdpPercap being zero is almost close to zero.Hence our hypothesis "lifeExp is dependent on gdpPercap" is correct.  
+
+```{r}
+glm.fit <- glm(lifeExp~gdpPercap,data=train.data)
+summary.glm <- summary(glm.fit)
+summary(glm.fit)
+```
+
+Generalised Linear model:
+By observing the summary of the generalised linear model fit the p value of gdpPercap is less than 2e-16 which says that the chance of coefficient of gdpPercap becoming zero is very less.Hence our hypothesis "lifeExp is dependent on gdpPercap" is correct.  
+```{r}
+loess.fit <- loess(lifeExp~gdpPercap,data=train.data)
+summary.loess <- summary(loess.fit)
+summary(loess.fit)
+```
+
+```{r}
+gam.fit <- gam(lifeExp~gdpPercap,data=train.data)
+summary.gam <- summary(gam.fit)
+summary(gam.fit)
+```
+generalized additive model:
+We can observe from the summary of the generalised additive model fit that the p value of gdpPercap is less than 2e-16 which says that the chance of coefficient of gdpPercap becoming zero is very less.Hence our hypothesis "lifeExp is dependent on gdpPercap" is correct according to generalised additive model.    
+
+
+```{r}
+rlm.fit <- rlm(lifeExp~gdpPercap,data=train.data)
+summary.rlm <- summary(rlm.fit)
+
+summary(rlm.fit)
+summary.rlm$coefficients[6]
+pValue <- 2*pt(summary.rlm$coefficients[6],summary.rlm$df[2],lower.tail = FALSE)
+cat("pValue of gdpPerCap is :",pValue)
+```
+robust linear model:
+We can observe p value of gdpPercap is 2.399971e-240 which says that the chance of coefficient of gdpPercap becoming zero is very less.Hence our hypothesis "lifeExp is dependent on gdpPercap" is correct according to generalised additive model.    
+
+
+```{r}
+lm.residuals <- data.frame(residuals = residuals(lm.fit))
+ggplot(data=lm.residuals,mapping=aes(x=residuals))+
+  geom_histogram(binwidth=1,aes(y = ..density..), alpha = 0.8,fill="skyblue")+labs(title="plot for residuals of train data from linear model")+theme(plot.title = element_text(hjust=0.5))+geom_vline(data=lm.residuals, aes(xintercept = 0), colour="red")+geom_density()
+
+```
+Goodness of fit of a model can be checked by plotting histogram plot of residuals.If the residuals are following normal distribution then we can say that our model is fitting the data properly.   
+We can observe from the histogram of residuals for linear model that the residuals are not following the normal distribution(we can clearly see its a bimodal distribution).This says that the model is not fitting the data properly.  
+
+```{r}
+
+glm.residuals <- data.frame(residuals = residuals(glm.fit))
+ggplot(data=glm.residuals,mapping=aes(x=residuals))+
+  geom_histogram(binwidth=1,aes(y=..density..),fill="skyblue",alpha=0.8)+labs(title="plot for residuals of train data from generalised linear model")+theme(plot.title = element_text(hjust=0.5))+geom_vline(data=glm.residuals, aes(xintercept = 0), colour="red")+geom_density()
+```
+We can observe from the histogram of residuals for generalised linear model that the residuals are not following the normal distribution.This says that the model is not fitting the data properly.  
+We can also see that there are some outliers towards the left in the histogram which has very high residual value.  
+```{r}
+
+gam.residuals <- data.frame(residuals = residuals(gam.fit))
+ggplot(data=gam.residuals,mapping=aes(x=residuals)) +
+  geom_histogram(binwidth=1,aes(y = ..density..), alpha = 0.8,fill="skyblue")+labs(title="plot for residuals of train data from generative additive model")+theme(plot.title = element_text(hjust=0.5))+geom_vline(data=gam.residuals, aes(xintercept = 0), colour="red")+geom_density()
+
+```
+As generative additive model is obtained by combining more than one glm model the residuals of this model is also coming out to be following the similar distribution.
+We can observe from the histogram of residuals for generalised additive model that the residuals are not following the normal distribution.This says that the model is not fitting the data properly.   
+
+```{r}
+
+rlm.residuals <- data.frame(residuals = residuals(rlm.fit))
+ggplot(data=rlm.residuals,mapping=aes(x=residuals)) +
+  geom_histogram(binwidth=5,aes(y = ..density..), alpha = 0.8,fill="skyblue")+labs(title="plot for residuals of train data from robust linear model")+theme(plot.title = element_text(hjust=0.5))+geom_vline(data=rlm.residuals, aes(xintercept = 0), colour="red")+geom_density()
+```
+We can observe that the residuals of robust linear are following normal distribution with some outliers lying towards the left in the histogram plot.  
+Hence we can say that robust linear model is properly fitting our data.
+```{r}
+loess.residuals <- data.frame(residuals = residuals(loess.fit))
+ggplot(data=loess.residuals,mapping=aes(x=residuals)) +
+  geom_histogram(binwidth=1,aes(y = ..density..), alpha = 0.8,fill="skyblue")+labs(title="plot for residuals of train data from loess model")+theme(plot.title = element_text(hjust=0.5))+geom_vline(data=loess.residuals, aes(xintercept = 0), colour="red")+geom_density()
+```
+We can observe that the residuals are lying symmetric the mean 0 which is expected.
+and also We can observe that the residuals of loess model are following normal distribution.  
+Hence we can say that loess is perfectly fitting our data.  
+Out of all the model loess is fitting the data perfectly but loess is not preferred for the datasets greater than 1000 samples as it is computationally not storable.It requires O(n^2) in memory.  
+```{r fig.width=12,fig.height=8}
+temp <- predict(lm.fit,test.data,interval = "predict")
+test.data$predicted <- temp[,1]
+test.data$residuals <- test.data$lifeExp-test.data$predicted
+sd1 <- sd(test.data$predicted)
+
+
+ggplot(test.data,mapping=aes(x=gdpPercap,y=lifeExp))+
+  geom_point(test.data,mapping=aes(x=gdpPercap,y=lifeExp,color=abs(residuals),size=abs(residuals)))+
+  geom_point(mapping=aes(y=predicted),shape=1)+geom_line(mapping=aes(y=predicted))+
+  scale_color_continuous(low="green",high="red")+
+  geom_segment(aes(xend=gdpPercap,yend=predicted),alpha=.2)+
+  theme_bw()+facet_wrap(continent~.)+geom_ribbon(mapping=aes(ymin=test.data$predicted-1.96*sd1,ymax=test.data$predicted+1.96*sd1), alpha = 0.3)+
+  labs(title="plot for actual vs predicted values of lifeExpectancy of different continents using lm",subtitle = "data from years 1993 to 2007")+
+  theme(plot.title = element_text(hjust=0.5),plot.subtitle = element_text(hjust=0.5))+
+  scale_x_continuous(labels = scales::dollar)
+```
+
+
+
+```{r fig.width=12,fig.height=8}
+
+test.data$predicted <- predict(glm.fit,test.data)
+test.data$residuals <- test.data$lifeExp-test.data$predicted
+sd2 <- sd(test.data$predicted)
+ggplot(test.data,mapping=aes(x=gdpPercap,y=lifeExp))+
+  geom_point(test.data,mapping=aes(x=gdpPercap,y=lifeExp,color=abs(residuals),size=abs(residuals)))+
+  geom_point(mapping=aes(y=predicted),shape=1)+geom_line(mapping=aes(y=predicted))+
+  scale_color_continuous(low="green",high="red")+
+  geom_segment(aes(xend=gdpPercap,yend=predicted),alpha=.2)+
+  theme_bw()+facet_wrap(continent~.)+geom_ribbon(mapping=aes(ymin=test.data$predicted-1.96*sd2,ymax=test.data$predicted+1.96*sd2), alpha = 0.3)+
+  labs(title="plot for actual vs predicted values of lifeExpectancy of different continents using glm",subtitle = "data from years 1993 to 2007")+
+  theme(plot.title = element_text(hjust=0.5),plot.subtitle = element_text(hjust=0.5))+
+  scale_x_continuous(labels = scales::dollar)
+
+```
+
+```{r fig.width=12,fig.height=8}
+
+test.data$predicted <- predict(rlm.fit,test.data)
+test.data$residuals <- test.data$lifeExp-test.data$predicted
+sd3 <- sd(test.data$predicted)
+
+ggplot(test.data,mapping=aes(x=gdpPercap,y=lifeExp))+
+  geom_point(test.data,mapping=aes(x=gdpPercap,y=lifeExp,color=abs(residuals),size=abs(residuals)))+
+  geom_point(mapping=aes(y=predicted),shape=1)+geom_line(mapping=aes(y=predicted))+
+  scale_color_continuous(low="green",high="red")+
+  geom_segment(aes(xend=gdpPercap,yend=predicted),alpha=.2)+
+  theme_bw()+facet_wrap(continent~.)+geom_ribbon(mapping=aes(ymin=test.data$predicted-1.96*sd3,ymax=test.data$predicted+1.96*sd3), alpha = 0.3)+
+  labs(title="plot for actual vs predicted values of lifeExpectancy of different continents using rlm",subtitle = "data from years 1993 to 2007")+
+  theme(plot.title = element_text(hjust=0.5),plot.subtitle = element_text(hjust=0.5))+
+  scale_x_continuous(labels = scales::dollar)
+
+```
+
+```{r fig.width=12,fig.height=8}
+
+test.data$predicted <- predict(gam.fit,test.data)
+test.data$residuals <- test.data$lifeExp-test.data$predicted
+sd4<-sd(test.data$predicted)
+
+ggplot(test.data,mapping=aes(x=gdpPercap,y=lifeExp))+
+  geom_point(test.data,mapping=aes(x=gdpPercap,y=lifeExp,color=abs(residuals),size=abs(residuals)))+
+  geom_point(mapping=aes(y=predicted),shape=1)+geom_line(mapping=aes(y=predicted))+
+  scale_color_continuous(low="green",high="red")+
+  geom_segment(aes(xend=gdpPercap,yend=predicted),alpha=.2)+geom_ribbon(mapping=aes(ymin=test.data$predicted-1.96*sd4,ymax=test.data$predicted+1.96*sd4), alpha = 0.3)+
+  theme_bw()+facet_wrap(continent~.)+
+  labs(title="plot for actual vs predicted values of lifeExpectancy of different continents using gam",subtitle = "data from years 1993 to 2007")+
+  theme(plot.title = element_text(hjust=0.5),plot.subtitle = element_text(hjust=0.5))+
+  scale_x_continuous(labels = scales::dollar)
+
+```
+
+
+```{r fig.width=12,fig.height=8}
+
+test.data$predicted <- predict(loess.fit,test.data)
+test.data$residuals <- test.data$lifeExp-test.data$predicted
+test.data <- test.data[complete.cases(test.data),]
+sd5<-sd(test.data$predicted)
+
+ggplot(test.data,mapping=aes(x=gdpPercap,y=lifeExp))+
+  geom_point(test.data,mapping=aes(x=gdpPercap,y=lifeExp,color=abs(residuals),size=abs(residuals)))+
+  geom_point(mapping=aes(y=predicted),shape=1)+geom_line(mapping=aes(y=predicted))+
+  scale_color_continuous(low="green",high="red")+
+  geom_segment(aes(xend=gdpPercap,yend=predicted),alpha=.2)+geom_ribbon(mapping=aes(ymin=test.data$predicted-1.96*sd5,ymax=test.data$predicted+1.96*sd5),alpha=0.3)+
+  theme_bw()+facet_wrap(continent~.)+
+  labs(title="plot for actual vs predicted values of lifeExpectancy of different continents using loess",subtitle = "data from years 1993 to 2007")+
+  theme(plot.title = element_text(hjust=0.5),plot.subtitle = element_text(hjust=0.5))+
+  scale_x_continuous(labels = scales::dollar)
+
+```
+

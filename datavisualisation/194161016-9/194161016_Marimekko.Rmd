@@ -1,0 +1,177 @@
+---
+title: "Marimekko chart"
+author: "Saikiran (194161016)"
+date: "28/05/2020"
+output:
+  word_document: default
+  html_document: default
+---
+```{r fig.width=9}
+#stacked bar plot 
+library(dplyr)
+library(ggthemes)
+library(ggplot2)
+
+
+#creating the dataframe with required values like Gender(male, female) application status(accepted or rejected), percentages showing the acceptance rates for male and female
+df12 <- data.frame(
+  Gender = rep(c("Male", "Female"), each=2),
+  status = rep(c("Accepted", "Rejected"),2),
+  len = c(44.28,55.72,34.58,65.42))
+
+#using geom_col to plot the stacked bar plot
+p <- ggplot(df12, aes(x = Gender, y = len))+
+  geom_col(aes(fill = status), width = 0.5)
+
+
+#adding additional attributes like themes, setting axis ticks, positioning the legend etc.
+p+scale_colour_wsj("colors6", "") + 
+  theme_wsj()+
+  labs(x = "Gender", y = "% of applicants",fill="status of application") + 
+  theme(text = element_text(size=10),axis.title=element_text(size=14),axis.title.x = element_text(size=14, face="bold", colour = "black"),    plot.caption = element_text(size='8'),
+    axis.title.y = element_text(size=14, face="bold", colour = "black"), legend.justification = "top",
+    axis.line.x = element_line(color="black", size = 1),
+    axis.line.y = element_line(color="black", size = 1),
+     panel.grid.major = element_line(colour = NA),legend.title = element_text(color = "black", size = 15),
+     panel.grid.minor = element_line(colour = NA))+scale_fill_brewer(palette = "Set2")+scale_fill_manual(values = c("#49517D","#CD4343"))+scale_y_continuous(label=function(x){return(paste(x, "%"))})+labs(title = "University of California Berkeley 1973 \n       Graduate applications", caption = "created By : V.Saikiran \n Data:https://en.wikipedia.org")
+
+```
+
+
+
+creating a data frame which has segment names different segments width, and heights of the bars(partitioned w.r.t acceptance rates).  
+```{r}
+df <- data.frame(segment = c("Male", "Female"), segpct = c(66.14, 33.86), Admitted = c(44.28,34.58), Rejected = c(55.72,65.42))
+
+```
+
+
+calculating the starting and ending points of the segments for x axis.  
+```{r}
+df$xmax <- cumsum(df$segpct)
+df$xmin <- df$xmax - df$segpct
+df$segpct <- NULL
+df
+```
+
+melting the data frame and storing start and end points of every combination of Gender and application status.  
+```{r}
+library(ggplot2)
+library(reshape2)
+library(plyr)
+#library(dplyr)
+
+dfm <- melt(df, id=c("segment","xmin","xmax"))
+dfm
+```
+
+
+calculating the start and end points for the acceptance rates on the y axis and storing them in the data frame.  
+```{r}
+dfm1 <- ddply(dfm, .(segment), transform, ymax = cumsum(value))
+dfm1 <- ddply(dfm1, .(segment), transform,
+     ymin = ymax - value)
+dfm1
+```
+
+calculatingt the position to store the text showing the acceptance/ rejection percentages.
+```{r}
+dfm1$xtext <- with(dfm1, xmin + (xmax - xmin)/2)
+dfm1$ytext <- with(dfm1, ymin + (ymax - ymin)/2)
+```
+
+
+
+plotting the graph with necessary themes, capions, font sizes, axis labels, axis ticks, titles, legend positioning.  
+With the help of geom_rect which requires start and end points of rectangles on x as well as y axis. We have supplied the xmin, xmax, ymin,ymax that we have calculated earlier.   
+```{r fig.width=9,fig.height=7}
+
+
+p <- ggplot(dfm1, aes(ymin = ymin, ymax = ymax,
+     xmin = xmin, xmax = xmax, fill = variable))
+p1 <- p + geom_rect(colour = I("grey"))
+p2 <- p1 + geom_text(aes(x = xtext, y = ytext,label = paste(value,"%", sep = ""), size = 2),color="white")
+p3 <- p2 + geom_text(aes(x = xtext, y = 103,
+     label = paste(segment)), size = 4)+guides(size=FALSE)
+
+p3 +scale_colour_wsj("colors6", "") + 
+  theme_wsj()+
+  labs(x = "Gender", y = "% of applicants",fill="status of application") + 
+  theme(text = element_text(size=10),axis.title=element_text(size=14),axis.title.x = element_text(size=14, face="bold", colour = "black"),    plot.caption = element_text(size='8'),
+    axis.title.y = element_text(size=14, face="bold", colour = "black"), legend.justification = "top",
+    axis.line.x = element_line(color="black", size = 1),
+    axis.line.y = element_line(color="black", size = 1),
+     panel.grid.major = element_line(colour = NA),legend.title = element_text(color = "black", size = 15),
+     panel.grid.minor = element_line(colour = NA))+scale_fill_brewer(palette = "Set2")+scale_fill_manual(values = c("#49517D","#CD4343"))+scale_y_continuous(label=function(x){return(paste(x, "%"))})+scale_x_continuous(label=function(x){return(paste(x, "%"))})+labs(title = "University of California Berkeley 1973 \n       Graduate applications", caption = "created By : V.Saikiran \n Data:https://en.wikipedia.org")
+ 
+```
+
+
+plotting the horizontal version by making x to y and y to axis and small modifications.  
+```{r fig.width=9,fig.height=7}
+
+#code for variation in marimekko horizontal marimekko chart
+p <- ggplot(dfm1, aes(ymin = xmin, ymax = xmax,
+     xmin = ymin, xmax = ymax, fill = variable))
+p1 <- p + geom_rect(colour = I("grey"))
+dfm1$xtext
+
+p2 <- p1 + geom_text(aes(x = ytext, y = xtext,label = paste(value,"%", sep = ""), size = 2),color="white")
+p3 <- p2 + geom_text(aes(x = 106, y = xtext,
+     label = paste(segment)), size = 4)+guides(size=FALSE)
+
+p3 +scale_colour_wsj("colors6", "") + 
+  theme_wsj()+
+  labs(x = "% of applicants", y = "Gender",fill="status of application") + 
+  theme(text = element_text(size=10),axis.title=element_text(size=14),axis.title.x = element_text(size=14, face="bold", colour = "black"),    plot.caption = element_text(size='8'),
+    axis.title.y = element_text(size=14, face="bold", colour = "black"), legend.justification = "top",
+    axis.line.x = element_line(color="black", size = 1),
+    axis.line.y = element_line(color="black", size = 1),
+     panel.grid.major = element_line(colour = NA),legend.title = element_text(color = "black", size = 15),
+     panel.grid.minor = element_line(colour = NA))+scale_fill_brewer(palette = "Set2")+scale_fill_manual(values = c("#49517D","#CD4343"))+scale_y_continuous(label=function(x){return(paste(x, "%"))})+scale_x_continuous(label=function(x){return(paste(x, "%"))})+labs(title = "University of California Berkeley 1973 \n       Graduate applications", caption = "created By : V.Saikiran \n Data:https://en.wikipedia.org")
+
+
+
+```
+
+
+plotting the bar mekko chart using the barmekko chart avaikable in mekko library.  
+```{r fig.width=9,fig.height=7}
+#bar mekko chart a sister of marimekko chart
+library(mekko)
+library(ggplot2)
+df <- data.frame(
+  Brand = c('Apple', 'Huawei', 'Oppo', 'Vivo','Xiaomi','All Others'),
+  marketShare = c(200, 220, 150, 150,240,660),
+  growth_Shipments = c(56,53,36,26, 23 ,-21)
+  )
+
+barMekko <- barmekko(df[order(-df$growth_Shipments),], Brand, growth_Shipments, marketShare)
+barMekko + 
+  labs(title = 'Growth shipments 2014-2015',caption = 'By: V.Saikiran \n data:www.mekkographics.com')+
+  scale_y_continuous(limits=c(-40, 60),label=function(x){return(paste(x, "%"))})+
+  scale_colour_wsj("colors6", "") + 
+  theme_wsj()+
+  theme(text = element_text(size=10),axis.title=element_text(size=14),axis.title.x = element_text(size=14, face="bold", colour = "black"),plot.caption = element_text(size='8'),
+    axis.title.y = element_text(size=14, face="bold", colour = "black"), legend.justification = "right",
+    axis.line.x = element_line(color="black", size = 1),
+    axis.line.y = element_line(color="black", size = 1))
+```
+
+plot demonstrating an application of Marimekko chart for contigency tables(confusion matrix)
+```{r fig.height=7,fig.width=9}
+library(ggplot2)
+library(ggmosaic)
+
+df <- data.frame(actualLabel=c('True','True','False','False'),predictedLabel=c('True','False','True','False'),value=c(300,52,48,150))
+ggplot(data=df) +
+  geom_mosaic(aes(weight=value, x=product(actualLabel), fill=predictedLabel))+geom_text(aes(x = c(0.68,0.68,0.18,0.18), y = c(0.6,0.08,0.85,0.25),label = paste(value), size = 2),color="white")+labs(title = '          Marimekko chart \n     Sample contigency table',caption = 'By: V.Saikiran')+
+  scale_colour_wsj("colors6", "") + 
+  theme_wsj()+
+  theme(text = element_text(size=10),legend.title = element_text(face='bold',size = 13),
+  legend.text = element_text(size = 8),axis.title=element_text(size=14),axis.title.x = element_text(size=14, face="bold", colour = "black"),plot.caption = element_text(size='8'),
+    axis.title.y = element_text(size=14, face="bold", colour = "black"), legend.justification = "right",
+    axis.line.x = element_line(color="black", size = 1),
+    axis.line.y = element_line(color="black", size = 1))+guides(size=FALSE)
+```
+
