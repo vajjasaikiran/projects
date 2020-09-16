@@ -1,0 +1,47 @@
+NewZealand Innings (50 overs maximum)																								
+BATSMEN				R						B		M		4s		6s				SR				
+MJ Guptill			lbw b Cottrell		0						1		3		0		0				0.00				
+C Munro			b Cottrell		0						1		10		0		0				0.00				
+KS Williamson(c)			c Hope(wk) b Cottrell		148						154		212		14		1				96.10				
+LRPL Taylor			c Holder b Gayle		69						95		148		7		0				72.63				
+TWM Latham(wk)			c & b Cottrell		12						16		35		0		0				75.00				
+JDS Neesham			c Cottrell b Brathwaite		28						23		43		1		1				121.73				
+C de Grandhomme			run out (Cottrell)		16						6		11		1		1				266.66				
+MJ Santner			c Cottrell b Brathwaite		10						5		8		0		1				200.00				
+MJ Henry			not out		0						0		1		0		0				0				
+Extras                                                                                    8 (lb 4, nb 1, w 3)
+TOTAL                                                                                       291/8 (50 Overs, RR: 5.82)
+Did not bat: LH Ferguson, TA Boult
+Fall of wickets: 1-0 (Martin Guptill, 0.1 ov),  2-7 (Colin Munro, 0.5 ov),  3-167 (Ross Taylor, 34.3 ov),  4-210 (Tom Latham, 41.5 ov),  5-251 (Kane Williamson, 46.3 ov),  6-270 (Colin de Grandhomme, 48.1 ov),  7-291 (Mitchell Santner, 49.5 ov),  8-291 (James Neesham, 49.6 ov)
+BOWLING			O	M	R	W	Econ	0s	4s	6s	WD	NB	
+SS Cottrell		10	1	56	4	5.60	30	3	1	1	0	
+KAJ Roach		10	2	38	0	3.80	41	5	0	0	0	
+JO Holder		7	0	42	0	6.00	17	5	0	0	1	
+O Thomas		6	0	30	0	5.00	20	4	0	0	0	
+CR Brathwaite	6	0	58	2	9.66	8	3	3	1	0	
+AR Nurse		9	0	55	0	6.11	13	3	0	0	0	
+CH Gayle		2	0	8	1	4.00	5	0	0	1	0
+
+WestIndies Innings (target: 292 runs from 50 overs)												
+BATSMEN									R			B	M	4s	6s		SR		
+CH Gayle		c Boult b de Grandhomme	87			84	111	8	6		103.57		
+SD Hope(wk)		b Boult	1			3	12	0	0		33.33		
+N Pooran		c Latham(wk) b Boult	1			7	17	0	0		14.28		
+SO Hetmyer		b Ferguson	54			45	72	8	1		120.00		
+JO Holder(c)		c Latham(wk) b Ferguson	0			1	2	0	0		0.00		
+CR Brathwaite		c Boult b Neesham	101			82	117	9	5		123.17		
+AR Nurse		c Latham(wk) b Boult	1			8	9	0	0		12.50		
+E Lewis			c Neesham b Boult	0			3	4	0	0		0.00		
+KAJ Roach		c Latham(wk) b Henry	14			31	44	0	1		45.16		
+SS Cottrell		b Ferguson	15			26	30	2	0		57.69		
+O Thomas		not out	0			4	24	0	0		0.00		
+Extras                                                  12 (lb 3, w 9)
+TOTAL                                             286 all out (49 Overs, RR: 5.83)
+Fall of wickets: 1-3 (Shai Hope, 2.4 ov),  2-20 (Nicholas Pooran, 6.2 ov),  3-142 (Shimron Hetmyer, 22.1 ov),  4-142 (Jason Holder, 22.2 ov),  5-152 (Chris Gayle, 23.6 ov),  6-163 (Ashley Nurse, 26.2 ov),  7-164 (Evin Lewis, 26.5 ov),  8-211 (Kemar Roach, 38.1 ov),  9-245 (Sheldon Cottrell, 44.6 ov),  10-286 (Carlos Brathwaite, 48.6 ov)
+BOWLING				O	M	R	W	ECON	0s	4s	6s	WD		NB
+TA Boult			10	1	30	4	3.00	42	3	0	1		0
+MJ Henry			9	0	76	1	8.44	29	6	6	2		0
+LH Ferguson			10	0	59	3	5.90	35	6	2	2		0
+JDS Neesham			6	0	35	1	5.83	21	6	0	0		0
+MJ Santner			10	1	61	0	6.10	32	2	5	0		0
+C de Grandhomme		4	0	22	1	5.50	15	4	0	0		0
