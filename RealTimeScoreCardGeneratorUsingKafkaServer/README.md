@@ -1,3 +1,5 @@
+#Realtime cricket score card generator using kafka server
+
 This execution requires kafka server,java/jdk,zookeeper installed on your pc and kafka-python(pip install kafka-python) a python module for kafka operations.
 
 194161016 folder has 2 python programs(producer program, consumer program), 45 commentary files(as 3 matches are abondonded) for producer to write data onto kafka server and a README file.
